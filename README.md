@@ -1,10 +1,3 @@
-#### App is live and running at 
-
-### https://nextjs-ecommerce-typescript.vercel.app/
-
-
- - don't forget to leave a star ! :)
-
 ## Authors
 
 - [Jansi singh](https://github.com/Jansi-Singh)

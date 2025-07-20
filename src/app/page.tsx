@@ -24,7 +24,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [ratio, setRatio] = useState(16/9) 
   useEffect(() => {
-    toast.warning("Application is under development , some features may not work properly")
+    // toast.warning("Application is under development , some features may not work properly")
     toast.warning('This is a demo website, you can not buy anything from here')
   }, [])
 

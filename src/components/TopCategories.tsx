@@ -20,33 +20,29 @@ export default function TopCategories() {
   );
   const catLoading = useSelector((state: RootState) => state.Admin.catLoading);
 
-  // Dummy fitness-related categories
+  // Dummy fitness-related categories with provided Unsplash images
   const dummyCategories: CategoryData[] = [
     {
       _id: "cat1",
       categoryName: "Yoga & Pilates",
-      categoryDescription:
-        "Mats, blocks, and accessories for yoga and pilates.",
-      categoryImage:
-        "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
-      categorySlug: "yoga-pilates",
+      categoryDescription: "Mats, blocks, and accessories for yoga and pilates.",
+      categoryImage: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      categorySlug: "yoga-pilates"
     },
     {
       _id: "cat2",
       categoryName: "Strength Training",
       categoryDescription: "Dumbbells, kettlebells, benches, and more.",
-      categoryImage:
-        "https://images.unsplash.com/photo-1517960413843-0aee8e2d471c?auto=format&fit=crop&w=400&q=80",
-      categorySlug: "strength-training",
+      categoryImage: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      categorySlug: "strength-training"
     },
     {
       _id: "cat3",
       categoryName: "Cardio Equipment",
       categoryDescription: "Jump ropes, treadmills, bikes, and accessories.",
-      categoryImage:
-        "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
-      categorySlug: "cardio-equipment",
-    },
+      categoryImage: "https://images.unsplash.com/photo-1627483298606-cf54c61779a9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      categorySlug: "cardio-equipment"
+    }
   ];
 
   // Use dummy data if catDataFromStore is empty or undefined

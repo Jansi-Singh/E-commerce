@@ -35,11 +35,19 @@ export default function FeaturedProduct() {
     // const prodDataFromStore = useSelector((state: RootState) => state.Admin.product);
     const prodLoading = useSelector((state: RootState) => state.Admin.productLoading);
 
-    // Dummy featured product data for testing (fitness-related)
+    // Dummy featured product data for testing (fitness-related, with provided Unsplash images)
+    const unsplashImages = [
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1627483298606-cf54c61779a9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ];
     const dummyProducts: ProductData[] = [
         {
             productName: "Yoga Mat",
-            productImage: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[0],
             productSlug: "yoga-mat",
             productPrice: 29.99,
             productFeatured: true,
@@ -52,7 +60,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Dumbbell Set",
-            productImage: "https://images.unsplash.com/photo-1517960413843-0aee8e2d471c?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[1],
             productSlug: "dumbbell-set",
             productPrice: 49.99,
             productFeatured: true,
@@ -65,7 +73,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Resistance Bands",
-            productImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[2],
             productSlug: "resistance-bands",
             productPrice: 19.99,
             productFeatured: true,
@@ -78,7 +86,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Kettlebell",
-            productImage: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[3],
             productSlug: "kettlebell",
             productPrice: 34.99,
             productFeatured: true,
@@ -91,7 +99,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Foam Roller",
-            productImage: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[4],
             productSlug: "foam-roller",
             productPrice: 24.99,
             productFeatured: true,
@@ -104,7 +112,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Jump Rope",
-            productImage: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[5],
             productSlug: "jump-rope",
             productPrice: 14.99,
             productFeatured: true,
@@ -117,7 +125,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Pull-Up Bar",
-            productImage: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[0],
             productSlug: "pull-up-bar",
             productPrice: 39.99,
             productFeatured: true,
@@ -130,7 +138,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Fitness Tracker",
-            productImage: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[1],
             productSlug: "fitness-tracker",
             productPrice: 59.99,
             productFeatured: true,
@@ -143,7 +151,7 @@ export default function FeaturedProduct() {
         },
         {
             productName: "Gym Bag",
-            productImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+            productImage: unsplashImages[2],
             productSlug: "gym-bag",
             productPrice: 27.99,
             productFeatured: true,

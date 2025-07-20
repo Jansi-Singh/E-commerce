@@ -8,11 +8,8 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { toast , ToastContainer } from 'react-toastify'
 import useSWR from 'swr'
-
-interface pageParam {
-    id: string
-}
-
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 
 type ProductData = {
@@ -32,9 +29,9 @@ type ProductData = {
 
 
 
-export default function Page({ params, searchParams }: { params: pageParam, searchParams: any }) {
+export default function CategoryProductPage() {
     const [thisProduct , setThisProdData] =  useState<ProductData[] | []>([]);
-    const { data, isLoading } = useSWR('/gettingProductOFSpecificCategoryID', () => get_product_by_category_id(params.id))
+    const { data, isLoading } = useSWR('/gettingProductOFSpecificCategoryID', () => get_product_by_category_id(useParams().id))
     if (data?.success !== true) toast.error(data?.message)
 
     useEffect(() => {
@@ -44,6 +41,62 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
     const CategoryName  =  thisProduct?.map((item) => {
         return item?.productCategory?.categoryName
     })
+
+    // Dummy categories (same as TopCategories)
+    const dummyCategories = [
+      {
+        _id: 'cat1',
+        categoryName: 'Yoga & Pilates',
+        categoryDescription: 'Mats, blocks, and accessories for yoga and pilates.',
+        categoryImage: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        categorySlug: 'yoga-pilates',
+      },
+      {
+        _id: 'cat2',
+        categoryName: 'Strength Training',
+        categoryDescription: 'Dumbbells, kettlebells, benches, and more.',
+        categoryImage: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        categorySlug: 'strength-training',
+      },
+      {
+        _id: 'cat3',
+        categoryName: 'Cardio Equipment',
+        categoryDescription: 'Jump ropes, treadmills, bikes, and accessories.',
+        categoryImage: 'https://images.unsplash.com/photo-1627483298606-cf54c61779a9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        categorySlug: 'cardio-equipment',
+      },
+    ];
+
+    const params = useParams();
+    const { id } = params;
+
+    // Find the category by id
+    const category = dummyCategories.find((cat) => cat._id === id) || dummyCategories[0];
+
+    // Dummy products for each category (for demo)
+    const dummyProducts = [
+      {
+        _id: 'prod1',
+        productName: 'Yoga Mat',
+        productImage: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        productCategory: 'cat1',
+      },
+      {
+        _id: 'prod2',
+        productName: 'Dumbbell Set',
+        productImage: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        productCategory: 'cat2',
+      },
+      {
+        _id: 'prod3',
+        productName: 'Treadmill',
+        productImage: 'https://images.unsplash.com/photo-1627483298606-cf54c61779a9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        productCategory: 'cat3',
+      },
+    ];
+
+    // Filter products for this category
+    const products = dummyProducts.filter((prod) => prod.productCategory === category._id);
 
     return (
         <div className='w-full h-screen dark:text-black bg-gray-50 py-4 px-2 '>

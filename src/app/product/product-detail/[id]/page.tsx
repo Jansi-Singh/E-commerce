@@ -15,6 +15,7 @@ import { RootState } from '@/Store/store'
 import { add_to_cart } from '@/Services/common/cart'
 import { setUserData } from '@/utils/UserDataSlice'
 import { bookmark_product } from '@/Services/common/bookmark'
+import { dummyProducts } from '@/utils/dummyProducts';
 
 
 interface pageParam {
@@ -45,13 +46,21 @@ type User = {
     _id: string,
 }
 
-export default function Page({ params, searchParams }: { params: pageParam, searchParams: any }) {
+// Remove local dummyProducts array, use imported dummyProducts instead
+
+export default function Page({ params, searchParams }: { params: { id: string }, searchParams: any }) {
     const dispatch = useDispatch();
     const [prodData, setprodData] = useState<ProductData | undefined>(undefined);
     const user = useSelector((state: RootState) => state.User.userData) as User | null
     const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(params.id))
-    if (data?.success !== true) toast.error(data?.message)
+    // Only show toast error if not using dummy data
+    useEffect(() => {
+        const dummy = dummyProducts.find(p => p._id === params.id);
+        if (!dummy && data?.success !== true) toast.error(data?.message);
+    }, [data, params.id]);
 
+    // Track if using dummy data
+    const [isDummy, setIsDummy] = useState(false);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -60,13 +69,35 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
     }, [])
 
     useEffect(() => {
-        setprodData(data?.data)
-    }, [data])
+        // Try to find the product in dummy data first
+        const dummy = dummyProducts.find(p => p._id === params.id);
+        if (dummy) {
+          setprodData(dummy);
+          setIsDummy(true);
+        } else {
+          setprodData(data?.data);
+          setIsDummy(false);
+        }
+    }, [data, params.id])
 
-
-
-
+    // AddToCart and AddToBookmark should work for both dummy and real data
     const AddToCart = async () => {
+        if (!prodData || !user?._id) return toast.error('User or product not found');
+        // For dummy data, just show a success toast and store in localStorage
+        if (isDummy) {
+            let cart = [];
+            if (typeof window !== 'undefined') {
+                const cartStr = localStorage.getItem('cart');
+                cart = cartStr ? JSON.parse(cartStr) : [];
+                // Avoid duplicates by _id
+                if (!cart.some((item: any) => item._id === prodData._id)) {
+                    cart.push(prodData);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                }
+            }
+            toast.success('Added to cart (demo)');
+            return;
+        }
         const finalData = { productID: params.id, userID: user?._id }
         const res = await add_to_cart(finalData);
         if (res?.success) {
@@ -76,8 +107,21 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
         }
     }
 
-
     const AddToBookmark = async () => {
+        if (!prodData || !user?._id) return toast.error('User or product not found');
+        if (isDummy) {
+            let bookmarks: string[] = [];
+            if (typeof window !== 'undefined') {
+                const bookmarksStr = localStorage.getItem('bookmarks');
+                bookmarks = bookmarksStr ? JSON.parse(bookmarksStr) : [];
+                if (!bookmarks.includes(prodData._id)) {
+                    bookmarks.push(prodData._id);
+                    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                }
+            }
+            toast.success('Bookmarked (demo)');
+            return;
+        }
         const finalData = { productID: params.id, userID: user?._id }
         const res = await bookmark_product(finalData);
         if (res?.success) {

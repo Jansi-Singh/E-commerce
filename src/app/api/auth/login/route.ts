@@ -11,9 +11,6 @@ const schema = Joi.object({
     password: Joi.string().required(),
 });
 
-
-
-
 export  async function POST (req: Request){
     await connectDB();
 

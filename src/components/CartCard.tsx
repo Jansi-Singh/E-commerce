@@ -124,10 +124,10 @@ export default function CartCard({ productID, userID, _id , quantity }: Data) {
     return (
         <div className='bg-white w-10/12  rounded-xl m-2 border-b flex-col md:flex-row h-72  md:h-40 py-2 px-4 flex justify-around items-center'>
             <Image src={productID?.productImage} alt='no image found' width={100} height={150} className='rounded' />
-            <h3 className='font-semibold text-lg'>Rs {productID?.productPrice}</h3>
+            <h3 className='font-semibold text-lg text-black'>Rs {productID?.productPrice}</h3>
             <div className='flex  justify-center items-center'>
                 <button onClick={handleIncrement} className='btn btn-circle dark:text-white  text-xl'>+</button>
-                <p className='mx-2 text-xl'>{quantity}</p>
+                <p className='mx-2 text-xl text-black'>{quantity}</p>
                 <button onClick={handleDecrement} className='btn btn-circle dark:text-white  text-xl'>-</button>
             </div>
             <AiFillDelete onClick={handleDeleteCartItem} className="text-red-500 text-2xl cursor-pointer " />

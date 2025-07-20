@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { MdFavorite } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
+import { dummyProducts, ProductData } from '@/utils/dummyProducts';
 
 interface userData {
     email: String,
@@ -26,6 +27,7 @@ export default function Page() {
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.User.userData) as userData | null
     const [loading, setLoading] = useState(true)
+    const [bookmarkedProducts, setBookmarkedProducts] = useState<ProductData[]>([]);
 
     useEffect(() => {
         if (!Cookies.get('token') || user === null) {
@@ -39,6 +41,15 @@ export default function Page() {
     useEffect(() => {
         fetchBookmarkData();
     }, [])
+
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const bookmarksStr = localStorage.getItem('bookmarks');
+        const bookmarks = bookmarksStr ? JSON.parse(bookmarksStr) : [];
+        const products = dummyProducts.filter(p => bookmarks.includes(p._id));
+        setBookmarkedProducts(products);
+      }
+    }, []);
 
     const fetchBookmarkData = async () => {
         if (!user?._id) return Router.push('/')

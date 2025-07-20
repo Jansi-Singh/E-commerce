@@ -4,13 +4,11 @@ import Joi from 'joi';
 import { NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
 
-
 const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
     name: Joi.string().required()
 });
-
 
 export  async function POST (req : Request)  {
     await connectDB();
@@ -39,4 +37,3 @@ export  async function POST (req : Request)  {
         return NextResponse.json({ success: false, message: "Something Went Wrong Please Retry Later !" })
     }
 }
-

@@ -14,6 +14,7 @@ import {  get_all_cart_Items } from '@/Services/common/cart'
 import { setCart } from '@/utils/CartSlice'
 import { setNavActive } from '@/utils/AdminNavSlice'
 import { create_a_new_order } from '@/Services/common/order'
+import { dummyProducts, ProductData } from '@/utils/dummyProducts';
 
 
 
@@ -64,6 +65,7 @@ export default function Page() {
     const user = useSelector((state: RootState) => state.User.userData) as userData | null
     const cartData = useSelector((state: RootState) => state.Cart.cart) as Data[] | null;
     const [loading, setLoading] = useState(true)
+    const [localCart, setLocalCart] = useState<ProductData[]>([]);
 
 
     useEffect(() => {
@@ -71,6 +73,13 @@ export default function Page() {
             Router.push('/')
         }
         dispatch(setNavActive('Base'))
+        // Load cart from localStorage if available
+        if (typeof window !== 'undefined') {
+            const cartStr = localStorage.getItem('cart');
+            if (cartStr) {
+                setLocalCart(JSON.parse(cartStr));
+            }
+        }
     }, [dispatch, Router])
 
     useEffect(() => {
@@ -108,15 +117,16 @@ export default function Page() {
 
     const onSubmit: SubmitHandler<Inputs> = async data => {
         setLoader(true)
-
+        // For localCart, use its structure; for Redux cart, use original
+        const orderItems = localCart.map(item => {
+            return {
+                product: item._id,
+                qty: 1
+            }
+        });
         const finalData = {
             user : user?._id,
-            orderItems : cartData?.map(item => {
-                return {
-                    product: item?.productID?._id,
-                    qty: item?.quantity
-                }
-            }),
+            orderItems,
             shippingAddress : {
                 fullName: data?.fullName,
                 address: data?.address,
@@ -134,7 +144,16 @@ export default function Page() {
             isDelivered : false,
             deliveredAt : new Date(),
         }
-
+        // For demo, just show a toast and clear localStorage cart
+        if (localCart.length > 0) {
+            toast.success('Order placed! (demo)');
+            localStorage.removeItem('cart');
+            setTimeout(() => {
+                Router.push('/')
+            } , 1000)
+            setLoader(false)
+            return;
+        }
 
         const res =  await create_a_new_order(finalData);
         if(res?.success){
@@ -152,15 +171,26 @@ export default function Page() {
     }
 
 
-    function calculateTotalPrice(myCart: Data[]) {
+    function calculateTotalPrice(myCart: any[]) {
         const totalPrice = myCart?.reduce((acc, item) => {
-            return acc + (Number(item?.quantity) * Number(item?.productID?.productPrice));
+            // For localCart, item.productPrice; for Redux cart, item.productID.productPrice
+            const price = item.productPrice || item.productID?.productPrice;
+            const qty = item.quantity || 1;
+            return acc + (Number(qty) * Number(price));
         }, 0);
 
         return totalPrice;
     }
 
-    const totalPrice = calculateTotalPrice(cartData as Data[])
+    const totalPrice = calculateTotalPrice(localCart);
+
+    // Use localCart if available, else fallback to Redux cartData
+    const effectiveCart = localCart.length > 0 ? localCart : (cartData || []);
+
+    // Helper to check if item is ProductData (dummy) or Data (DB)
+    function isProductData(item: any): item is ProductData {
+        return !!item.productName && !!item.productImage;
+    }
 
     return (
         <div className='w-full h-full bg-gray-50 px-2'>
@@ -178,8 +208,8 @@ export default function Page() {
                     </li>
                 </ul>
             </div>
-            <div className='w-full h-20 my-2 text-center'>
-                <h1 className='text-2xl py-2 dark:text-black'>Your Order</h1>
+            <div className="w-full h-20 my-2 text-center">
+                <h1 className="text-2xl py-2 text-black">Your Order</h1>
             </div>
 
 
@@ -205,19 +235,37 @@ export default function Page() {
                         <div className='md:w-2/3 w-full px-2 h-full flex-col items-end justify-end flex'>
                             <div className='w-full flex flex-col items-center py-2 overflow-auto h-96'>
                                 {
-                                    cartData?.length === 0 ?
+                                    effectiveCart.length === 0 ?
                                         <div className='w-full h-full flex items-center justify-center flex-col'>
-                                            <p className='my-4 mx-2 text-lg font-semibold '>No Item Available in Cart</p>
-                                            <Link href={"/"} className='btn text-white'>Shop Now</Link>
+                                            <p className='my-4 mx-2 text-lg font-semibold text-black'>No Item Available in Cart</p>
+                                            <Link href={'/'} className='btn text-white'>Shop Now</Link>
                                         </div>
                                         :
-                                        cartData?.map((item: Data) => {
-                                            return <CartCard key={item?._id}
-                                                productID={item?.productID}
-                                                userID={item?.userID}
-                                                _id={item?._id}
-                                                quantity={item?.quantity}
-                                            />
+                                        effectiveCart.map((item: any) => {
+                                            if (isProductData(item)) {
+                                                return <CartCard key={item._id}
+                                                    productID={{
+                                                        productName: String(item.productName),
+                                                        productPrice: String(item.productPrice),
+                                                        _id: String(item._id),
+                                                        productImage: String(item.productImage),
+                                                        productQuantity: item.productQuantity,
+                                                    }}
+                                                    userID={{
+                                                        email: String(user?.email || ''),
+                                                        _id: String(user?._id || ''),
+                                                    }}
+                                                    _id={String(item._id)}
+                                                    quantity={1}
+                                                />
+                                            } else {
+                                                return <CartCard key={item._id}
+                                                    productID={item.productID}
+                                                    userID={item.userID}
+                                                    _id={item._id}
+                                                    quantity={item.quantity}
+                                                />
+                                            }
                                         })
                                 }
                             </div>
